@@ -1,5 +1,9 @@
 package com.cliUtils.receivers.htmlPageReceiver;
 
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 public class HttpUrlValidator {
 
     public static boolean isHttpUrlValid(String url){
@@ -9,11 +13,33 @@ public class HttpUrlValidator {
         if(!isValid)
             System.out.println("URL does not valid. Please input valid URL, that should begin like http://...... ");
 
-        return isValid;
+        return isValid && (isHttpUrlExist(url));
+    }
+
+    private static boolean isHttpUrlExist(String url) {
+        try {
+            try {
+                String contentByUrl = new HtmlGetter().getContentByUrl(url);
+
+                try {
+                    if (!isHtmlDocType(contentByUrl))
+                        throw new TypeNotPresentException("This URL " + url + " does not have HTML content. Please input another URL", new Throwable());
+                } catch (TypeNotPresentException et){
+                    System.out.println(et.typeName());
+                    return false;
+                }
+                return true;
+            } catch (IllegalArgumentException | UnknownHostException | SocketException e) {
+                System.out.println("URL does not exist. Please input an existing URL. Please input another URL");
+                return false;
+            }
+        } catch (IOException eio) {
+            eio.printStackTrace();
+            return false;
+        }
     }
 
     private static boolean isHtmlDocType(String page){
         return page.substring(0, 14).equalsIgnoreCase("<!DOCTYPE html");
     }
 }
-
