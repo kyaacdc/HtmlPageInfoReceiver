@@ -2,9 +2,7 @@ package com.cliUtils.receivers.htmlPageReceiver;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 import static com.cliUtils.receivers.htmlPageReceiver.HtmlGetter.getContentByUrl;
 
@@ -23,6 +21,9 @@ public class Main{
 
         //Get page content for requested Url
         page = getContentByUrl(url);
+
+        runProcessWithNoLibrariesHelp();
+
     }
 
     private static void intro(String[] args){
@@ -43,5 +44,14 @@ public class Main{
             sc = new Scanner(System.in);
             url = sc.nextLine();
         }
+    }
+
+    private static void runProcessWithNoLibrariesHelp(){
+
+        CodeParser codeParser = new CodeParser();
+
+        List<String> listWords = codeParser.getWordsFromPage(page);
+
+        System.out.println(listWords);
     }
 }
