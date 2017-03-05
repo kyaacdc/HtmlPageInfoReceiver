@@ -19,6 +19,11 @@ public class Main{
             sc = new Scanner(System.in);
             url = sc.nextLine();
         }
+
+        while (!HttpUrlValidator.isHttpUrlValid(url)) {
+            sc = new Scanner(System.in);
+            url = sc.nextLine();
+        }
     }
 
     public static void main(String[] args) {
