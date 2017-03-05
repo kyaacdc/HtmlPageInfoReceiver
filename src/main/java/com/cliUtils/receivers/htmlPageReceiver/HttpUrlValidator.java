@@ -30,7 +30,7 @@ public class HttpUrlValidator {
                 }
                 return true;
             } catch (IllegalArgumentException | UnknownHostException | SocketException e) {
-                System.out.println("URL does not exist. Please input an existing URL. Please input another URL");
+                System.out.println("This URL " + url + " does not exist. Please input an existing URL. Please input another URL");
                 return false;
             }
         } catch (IOException eio) {
@@ -40,6 +40,7 @@ public class HttpUrlValidator {
     }
 
     private static boolean isHtmlDocType(String page){
-        return page.substring(0, 14).equalsIgnoreCase("<!DOCTYPE html");
+        return page.substring(0, 14).equalsIgnoreCase("<!DOCTYPE html") ||
+                page.substring(0, 5).equalsIgnoreCase("<html");
     }
 }

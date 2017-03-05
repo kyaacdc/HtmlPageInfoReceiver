@@ -9,7 +9,6 @@ _site/
 # IntelliJ project files
 .idea
 *.iml
-out
 gen
 .gradle/
 gradle/
