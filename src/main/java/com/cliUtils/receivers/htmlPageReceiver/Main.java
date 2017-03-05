@@ -13,22 +13,30 @@ public class Main{
     private static String url = "";
     private static String page;
 
-    //Constructor is private for deny create any instance from this class
     private Main() {}
 
     public static void main(String[] args) throws IOException {
 
+        Main main = new Main();
+
         //Checking and/or input URL and content on html-page
-        intro(args);
+        main.intro(args);
 
         //Get page content for requested Url
         page = getContentByUrl(url);
 
-        runProcessWithNoLibrariesHelp();
+        //Process with getting words content without any external libraries
+        main.runProcessWithNoLibrariesHelp();
 
+        //Process with getting words content with help Jsoup external library
+        main.runProcessWithJsoup();
+
+        System.out.println("\nResults between custom and Jsoup parser can be little differ," +
+                " because Jsoup parser work at another algorithm that different of task.");
     }
 
-    private static void intro(String[] args){
+
+    private void intro(String[] args){
 
         Scanner sc;
 
@@ -48,26 +56,50 @@ public class Main{
         }
     }
 
-    private static void runProcessWithNoLibrariesHelp(){
+    private void runProcessWithNoLibrariesHelp(){
 
         //Get parser instance for processing html-code (without help any external libraries)
-        CodeParser codeParser = new CodeParser();
+        CodeParserNoLibraries codeParserNoLibraries = new CodeParserNoLibraries();
 
         //Get list words from body of html-page for codeParserNoLibraries instance
-        List<String> listWordsNoLibraries = codeParser.getWordsFromPage(page);
+        List<String> listWordsNoLibraries = codeParserNoLibraries.getWordsFromPage(page);
 
         //Get map and then set of words for show sorted list words with amount (from listWordsNoLibraries)
-        Map<String, Long> mapNoLib = codeParser.getWordsCountMap(listWordsNoLibraries);
+        Map<String, Long> mapNoLib = codeParserNoLibraries.getWordsCountMap(listWordsNoLibraries);
         Set<Map.Entry<String, Long>> entriesNoLib = mapNoLib.entrySet();
 
+        System.out.println("\nDemonstration of program work, with not use some external libraries for parse");
         System.out.println("All count of words on page (with Tags) - "
-                + codeParser.wordCountWithTags(page));
+                + codeParserNoLibraries.wordCountWithTags(page));
         System.out.println("All count of words on page (with No Tags) with repeat - "
-                + codeParser.wordCountAllWordsNoTagWithRepeat(page));
+                + codeParserNoLibraries.wordCountAllWordsNoTagWithRepeat(page));
         System.out.println("All count of words on page (with No Tags) with No repeat - "
-                + codeParser.wordCountAllWordsNoTagWithNoRepeat(page));
-        System.out.println("\nBelow is sorted list of WORD - COUNT");
+                + codeParserNoLibraries.wordCountAllWordsNoTagWithNoRepeat(page));
+        System.out.println("\nBelow is sorted list of words (WORD - COUNT)");
 
         entriesNoLib.forEach(a -> System.out.println(a.getKey() + " - " + a.getValue()));
+    }
+
+    private void runProcessWithJsoup() {
+        //Get parser instance for processing html-code (with help JSoup parser, for compare custom parser)
+        CodeParserJsoup codeParserJsoup = new CodeParserJsoup();
+
+        //Get list words from body of html-page for codeParserJsoup instance (for compare results)
+        List<String> listWordsJsoup = codeParserJsoup.getWordsFromPage(page);
+
+        //Get map and then set of words for show sorted list words with amount (from listWordsJsoup)
+        Map<String, Long> mapJsoup = codeParserJsoup.getWordsCountMap(listWordsJsoup);
+        Set<Map.Entry<String, Long>> entriesJsoup = mapJsoup.entrySet();
+
+        System.out.println("\nDemonstration of program work, with use Jsoup library for parse\n");
+        System.out.println("All count of words on page (with Tags) - "
+                + codeParserJsoup.wordCountWithTags(page));
+        System.out.println("All count of words on page (with No Tags) with repeat - "
+                + codeParserJsoup.wordCountAllWordsNoTagWithRepeat(page));
+        System.out.println("All count of words on page (with No Tags) with No repeat - "
+                + codeParserJsoup.wordCountAllWordsNoTagWithNoRepeat(page));
+        System.out.println("\nBelow is sorted list of WORD - COUNT");
+
+        entriesJsoup.forEach(a -> System.out.println(a.getKey() + " - " + a.getValue()));
     }
 }

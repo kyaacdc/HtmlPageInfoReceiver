@@ -3,26 +3,26 @@ package com.cliUtils.receivers.htmlPageReceiver;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CodeParser {
+public class CodeParserNoLibraries {
 
     private String page;
 
-    public CodeParser() {
+    public CodeParserNoLibraries() {
     }
 
-    public CodeParser(String page) {
+    public CodeParserNoLibraries(String page) {
         this.page = page;
     }
 
-    public String getPage() {
+    protected String getPage() {
         return page;
     }
 
-    public void setPage(String page) {
+    protected void setPage(String page) {
         this.page = page;
     }
 
-    public Map<String, Long> getWordsCountMap(List<String> words) {
+    protected Map<String, Long> getWordsCountMap(List<String> words) {
 
         Map<String, Long> map = new TreeMap<>(String::compareToIgnoreCase);
 
@@ -32,19 +32,19 @@ public class CodeParser {
         return map;
     }
 
-    public List<String> getWordsFromPage(String page){
+    protected List<String> getWordsFromPage(String page){
         return  removeEmptyElements(getListNoSingleTags(getNoScriptList(getNoFontTagList(getListBodyRaw(getListOfBodyWords(page))))));
     }
 
-    public int wordCountAllWordsNoTagWithRepeat(String page) {
+    protected int wordCountAllWordsNoTagWithRepeat(String page) {
         return getWordsFromPage(page).size();
     }
 
-    public int wordCountAllWordsNoTagWithNoRepeat(String page){
+    protected int wordCountAllWordsNoTagWithNoRepeat(String page){
         return getWordsCountMap(getWordsFromPage(page)).size();
     }
 
-    public int wordCountWithTags(String s) {
+    protected int wordCountWithTags(String s) {
         int c = 0;
         char ch[]= new char[s.length()];
         for(int i = 0; i < s.length(); i++)
@@ -57,11 +57,11 @@ public class CodeParser {
     }
 
     //This method should for get raw page content for parse without help any libraries
-    public List<String> getListOfBodyWords (String text){
+    protected List<String> getListOfBodyWords (String text){
         return Arrays.asList(text.split(" "));
     }
 
-    public List<String> getListBodyRaw(List<String> list){
+    private List<String> getListBodyRaw(List<String> list){
 
         list = list.stream().filter(a -> !a.equals("")).collect(Collectors.toList());
 
@@ -83,7 +83,7 @@ public class CodeParser {
         return list.subList(startBodyIndex, endBodyIndex);
     }
 
-    public List<String> getNoFontTagList(List<String> list) {
+    private List<String> getNoFontTagList(List<String> list) {
 
         String temp = "";
 
@@ -94,15 +94,6 @@ public class CodeParser {
                     temp = s.substring(4);
                     list.set(list.indexOf(s), temp);
                 }
-                if(i + 5 < s.length() && s.substring(i, i + 4).equals("</h3")){
-                    temp = s.substring(0, i);
-                    list.set(list.indexOf(s), temp);
-                    break;
-
-                }
-
-
-
                 if ((i + 4 < s.length()) && s.length() > 5 && s.substring(i, i + 3).equals("</h")) {
                     //temp = s.substring(0, s.length() - 5);
                     temp = s.substring(0, i);
@@ -114,11 +105,10 @@ public class CodeParser {
                 }
             }
         }
-
         return list;
     }
 
-    public List<String> getNoScriptList(List<String> list) {
+    private List<String> getNoScriptList(List<String> list) {
 
         int startBodyIndex = 0;
         int endBodyIndex = list.size();
@@ -163,11 +153,11 @@ public class CodeParser {
         return resultList;
     }
 
-    public List<String> getListNoSingleTags(List<String> list) {
+    private List<String> getListNoSingleTags(List<String> list) {
 
         Set<String> exscludeList = new LinkedHashSet<>();
 
-        Collections.addAll(exscludeList, "[ ] < > = / \" | - * . ( ) ! @".split(" "));
+        Collections.addAll(exscludeList, "[ ] < > = / | - * . ( ) ! @".split(" "));
 
         for(String exclude: exscludeList) {
 
@@ -205,7 +195,7 @@ public class CodeParser {
         return list;
     }
 
-    public List<String> removeEmptyElements(List<String> list){
+    private List<String> removeEmptyElements(List<String> list){
         return list.stream().filter(a -> !a.equals("")).collect(Collectors.toList());
     }
 }
