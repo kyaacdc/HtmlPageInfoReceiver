@@ -33,7 +33,7 @@ public class CodeParser {
     }
 
     public List<String> getWordsFromPage(String page){
-        return  removeEmptyElements(getListNoSingleTags(getNoScriptList(getListNoSingleTags(getNoFontTagList(getListBodyRaw(getListOfBodyWords(page)))))));
+        return  removeEmptyElements(getListNoSingleTags(getNoScriptList(getNoFontTagList(getListBodyRaw(getListOfBodyWords(page))))));
     }
 
     public int wordCountAllWordsNoTagWithRepeat(String page) {
@@ -85,9 +85,6 @@ public class CodeParser {
 
     public List<String> getNoFontTagList(List<String> list) {
 
-        System.out.println(list);
-
-
         String temp = "";
 
         for (String s : list) {
@@ -97,8 +94,18 @@ public class CodeParser {
                     temp = s.substring(4);
                     list.set(list.indexOf(s), temp);
                 }
+                if(i + 5 < s.length() && s.substring(i, i + 4).equals("</h3")){
+                    temp = s.substring(0, i);
+                    list.set(list.indexOf(s), temp);
+                    break;
+
+                }
+
+
+
                 if ((i + 4 < s.length()) && s.length() > 5 && s.substring(i, i + 3).equals("</h")) {
-                    temp = s.substring(0, s.length() - 5);
+                    //temp = s.substring(0, s.length() - 5);
+                    temp = s.substring(0, i);
                     try {
                         list.set(list.indexOf(s), temp);
                     } catch (IndexOutOfBoundsException e){
@@ -107,7 +114,6 @@ public class CodeParser {
                 }
             }
         }
-        System.out.println(list);
 
         return list;
     }
@@ -161,7 +167,7 @@ public class CodeParser {
 
         Set<String> exscludeList = new LinkedHashSet<>();
 
-        Collections.addAll(exscludeList, "[ ] < > = / | - * . ( ) ! @".split(" "));
+        Collections.addAll(exscludeList, "[ ] < > = / \" | - * . ( ) ! @".split(" "));
 
         for(String exclude: exscludeList) {
 
@@ -173,6 +179,19 @@ public class CodeParser {
                 }
 
                 for (int i = 0; i < s.length(); i++) {
+
+                    if (s.charAt(0) == '(') {
+                        String result = s.substring(1, s.length());
+                        list.set(list.indexOf(s), result);
+                        break;
+                    }
+
+                    if (s.charAt(i) == ')') {
+                        String result = s.substring(0, i);
+                        list.set(list.indexOf(s), result);
+                        break;
+                    }
+
                     if ((i + exclude.length() - 1 < s.length()) && s.length() > exclude.length()
                             && s.substring(i, i + exclude.length()).equals(exclude))
                     {

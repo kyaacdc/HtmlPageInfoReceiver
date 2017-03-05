@@ -2,7 +2,9 @@ package com.cliUtils.receivers.htmlPageReceiver;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import static com.cliUtils.receivers.htmlPageReceiver.HtmlGetter.getContentByUrl;
 
@@ -48,10 +50,24 @@ public class Main{
 
     private static void runProcessWithNoLibrariesHelp(){
 
+        //Get parser instance for processing html-code (without help any external libraries)
         CodeParser codeParser = new CodeParser();
 
-        List<String> listWords = codeParser.getWordsFromPage(page);
+        //Get list words from body of html-page for codeParserNoLibraries instance
+        List<String> listWordsNoLibraries = codeParser.getWordsFromPage(page);
 
-        System.out.println(listWords);
+        //Get map and then set of words for show sorted list words with amount (from listWordsNoLibraries)
+        Map<String, Long> mapNoLib = codeParser.getWordsCountMap(listWordsNoLibraries);
+        Set<Map.Entry<String, Long>> entriesNoLib = mapNoLib.entrySet();
+
+        System.out.println("All count of words on page (with Tags) - "
+                + codeParser.wordCountWithTags(page));
+        System.out.println("All count of words on page (with No Tags) with repeat - "
+                + codeParser.wordCountAllWordsNoTagWithRepeat(page));
+        System.out.println("All count of words on page (with No Tags) with No repeat - "
+                + codeParser.wordCountAllWordsNoTagWithNoRepeat(page));
+        System.out.println("\nBelow is sorted list of WORD - COUNT");
+
+        entriesNoLib.forEach(a -> System.out.println(a.getKey() + " - " + a.getValue()));
     }
 }
