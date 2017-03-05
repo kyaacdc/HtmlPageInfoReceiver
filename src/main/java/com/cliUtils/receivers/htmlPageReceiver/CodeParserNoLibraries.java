@@ -176,6 +176,12 @@ public class CodeParserNoLibraries {
                         break;
                     }
 
+                    if (s.charAt(s.length() - 1) == ',') {
+                        String result = s.substring(0, s.length() - 1);
+                        list.set(list.indexOf(s), result);
+                        break;
+                    }
+
                     if (s.charAt(i) == ')') {
                         String result = s.substring(0, i);
                         list.set(list.indexOf(s), result);

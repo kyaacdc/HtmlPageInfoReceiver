@@ -32,7 +32,7 @@ public class Main{
         main.runProcessWithJsoup();
 
         System.out.println("\nResults between custom and Jsoup parser can be little differ," +
-                " because Jsoup parser work at another algorithm that different of task.");
+                " because jsoup parser work at another algorithm that different of task.");
     }
 
 
