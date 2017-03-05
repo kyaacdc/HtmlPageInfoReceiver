@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import static com.cliUtils.receivers.htmlPageReceiver.HtmlGetter.getContentByUrl;
+
 public class HttpUrlValidator {
 
     public static boolean isHttpUrlValid(String url){
@@ -19,7 +21,7 @@ public class HttpUrlValidator {
     private static boolean isHttpUrlExist(String url) {
         try {
             try {
-                String contentByUrl = new HtmlGetter().getContentByUrl(url);
+                String contentByUrl = getContentByUrl(url);
 
                 try {
                     if (!isHtmlDocType(contentByUrl))
